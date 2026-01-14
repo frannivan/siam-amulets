@@ -18,8 +18,8 @@ El proyecto ya está configurado con Docker. Asegúrese de subir los cambios al 
 git add .
 git commit -m "chore: Configuración de despliegue y manual técnico"
 
-# Subir a la rama principal (master o main)
-git push -u origin master
+# Subir a la rama principal (main)
+git push -u origin main
 ```
 
 ## 3. Preparación del Servidor (Oracle Cloud)
