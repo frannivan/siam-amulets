@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - JWT_SECRET=ChangeThisToAlongSecureSecretKeyForProductionUseOnly
+      # Define other env vars as needed
+    restart: always

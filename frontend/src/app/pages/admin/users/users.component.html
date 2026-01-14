@@ -1,0 +1,55 @@
+<div class="admin-container" style="padding: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2>User Management</h2>
+        <!-- Future: Add 'Create Admin' button here -->
+    </div>
+
+    <div *ngIf="loading" style="text-align: center; padding: 2rem;">
+        Loading users...
+    </div>
+
+    <div *ngIf="!loading && users.length === 0" style="text-align: center; padding: 2rem; color: #666;">
+        No users found.
+    </div>
+
+    <div *ngIf="!loading && users.length > 0"
+        style="overflow-x: auto; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <table style="width: 100%; border-collapse: collapse; min-width: 600px;">
+            <thead style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                <tr>
+                    <th style="padding: 1rem; text-align: left;">ID</th>
+                    <th style="padding: 1rem; text-align: left;">Name</th>
+                    <th style="padding: 1rem; text-align: left;">Email</th>
+                    <th style="padding: 1rem; text-align: left;">Role</th>
+                    <th style="padding: 1rem; text-align: left;">Status</th>
+                    <th style="padding: 1rem; text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of users" style="border-bottom: 1px solid #dee2e6;">
+                    <td style="padding: 1rem;">{{ user.id }}</td>
+                    <td style="padding: 1rem;">{{ user.firstName }} {{ user.lastName }}</td>
+                    <td style="padding: 1rem;">{{ user.email }}</td>
+                    <td style="padding: 1rem;">
+                        <span [style.background]="user.role === 'ADMIN' ? '#e3f2fd' : '#f3e5f5'"
+                            [style.color]="user.role === 'ADMIN' ? '#1976d2' : '#7b1fa2'"
+                            style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8em; font-weight: bold;">
+                            {{ user.role }}
+                        </span>
+                    </td>
+                    <td style="padding: 1rem;">
+                        <span [style.color]="user.active ? 'green' : 'red'">
+                            {{ user.active ? 'Active' : 'Inactive' }}
+                        </span>
+                    </td>
+                    <td style="padding: 1rem; text-align: right;">
+                        <button (click)="deleteUser(user.id)" [disabled]="user.role === 'ADMIN' && user.id === 1"
+                            style="background: #dc3545; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

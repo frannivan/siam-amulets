@@ -1,0 +1,43 @@
+<div class="container" style="max-width: 400px; margin-top: 4rem;">
+    <h2>{{ 'AUTH.REGISTER' | translate }}</h2>
+    <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+        <div style="margin-bottom: 1rem;">
+            <label for="firstName" style="display: block; margin-bottom: 0.5rem;">{{ 'AUTH.FIRST_NAME' | translate
+                }}</label>
+            <input type="text" id="firstName" name="firstName" [(ngModel)]="formData.firstName" required
+                autocomplete="given-name" style="width: 100%; padding: 0.5rem;">
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+            <label for="lastName" style="display: block; margin-bottom: 0.5rem;">{{ 'AUTH.LAST_NAME' | translate
+                }}</label>
+            <input type="text" id="lastName" name="lastName" [(ngModel)]="formData.lastName" required
+                autocomplete="family-name" style="width: 100%; padding: 0.5rem;">
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+            <label for="email" style="display: block; margin-bottom: 0.5rem;">{{ 'AUTH.EMAIL' | translate }}</label>
+            <input type="email" id="email" name="email" [(ngModel)]="formData.email" required autocomplete="email"
+                style="width: 100%; padding: 0.5rem;">
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+            <label for="password" style="display: block; margin-bottom: 0.5rem;">{{ 'AUTH.PASSWORD' | translate
+                }}</label>
+            <input type="password" id="password" name="password" [(ngModel)]="formData.password" required minlength="6"
+                autocomplete="new-password" style="width: 100%; padding: 0.5rem;">
+        </div>
+
+        @if (errorMessage) {
+        <p style="color: red; margin-bottom: 1rem;">{{ errorMessage }}</p>
+        }
+
+        <button type="submit" class="btn btn-primary" [disabled]="!registerForm.form.valid" style="width: 100%;">{{
+            'AUTH.SIGN_UP' | translate }}</button>
+    </form>
+
+    <p style="margin-top: 1rem; text-align: center;">
+        {{ 'AUTH.ALREADY_HAVE' | translate }} <a routerLink="/login" style="color: var(--primary-color);">{{
+            'AUTH.LOGIN_HERE' | translate }}</a>
+    </p>
+</div>

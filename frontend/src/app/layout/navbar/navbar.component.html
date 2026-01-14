@@ -1,0 +1,71 @@
+<nav class="sticky top-0 z-50 bg-gray-900/95 backdrop-blur-md border-b border-white/10 text-white shadow-2xl">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-20">
+
+      <!-- Logo -->
+      <a routerLink="/" class="flex flex-col items-start group">
+        <span
+          class="text-2xl font-black text-yellow-500 tracking-tighter group-hover:text-yellow-400 transition-colors">AMULETS
+          OF SIAM</span>
+        <span class="text-[10px] uppercase font-bold text-gray-400 tracking-[0.3em] -mt-1">
+          {{ 'NAV.SACRED_RELICS' | translate }}
+        </span>
+      </a>
+
+      <!-- Desktop Links -->
+      <div class="hidden md:flex items-center gap-12">
+        <a routerLink="/" routerLinkActive="text-yellow-500" [routerLinkActiveOptions]="{exact: true}"
+          class="text-sm font-bold uppercase tracking-widest hover:text-yellow-500 transition-colors">
+          {{ 'NAV.HOME' | translate }}
+        </a>
+
+        @if (authService.isAuthenticated() && authService.isAdmin()) {
+        <a routerLink="/admin" routerLinkActive="text-yellow-500"
+          class="text-sm font-black text-red-500 uppercase tracking-widest hover:text-red-400 transition-colors bg-red-500/10 px-3 py-1 rounded">
+          {{ 'NAV.ADMIN' | translate }}
+        </a>
+        }
+      </div>
+
+      <!-- Actions (Cart, Lang & Auth) -->
+      <div class="flex items-center gap-6">
+
+        <!-- Language Switcher -->
+        <div class="flex items-center bg-white/5 rounded-full p-1 border border-white/10">
+          <button (click)="switchLanguage('en')" [class.bg-yellow-500]="langService.currentLang() === 'en'"
+            [class.text-black]="langService.currentLang() === 'en'"
+            class="px-3 py-1 rounded-full text-[10px] font-black transition-all hover:scale-110">EN</button>
+          <button (click)="switchLanguage('th')" [class.bg-yellow-500]="langService.currentLang() === 'th'"
+            [class.text-black]="langService.currentLang() === 'th'"
+            class="px-3 py-1 rounded-full text-[10px] font-black transition-all hover:scale-110">TH</button>
+        </div>
+
+        <!-- Shopping Cart Icon -->
+        <a routerLink="/cart" routerLinkActive="active"
+          class="relative group p-2 hover:bg-white/5 rounded-full transition-all">
+          <span
+            class="material-icons text-white group-hover:text-yellow-500 text-2xl transition-colors">shopping_bag</span>
+          @if (cartService.getItemCount() > 0) {
+          <span
+            class="absolute -top-1 -right-1 bg-yellow-500 text-black text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-gray-900 animate-bounce">
+            {{ cartService.getItemCount() }}
+          </span>
+          }
+        </a>
+
+        @if (authService.isAuthenticated()) {
+        <button (click)="logout()"
+          class="text-xs font-black uppercase tracking-widest text-gray-400 hover:text-white transition-colors border-l border-white/10 pl-6 h-10">
+          {{ 'NAV.LOGOUT' | translate }}
+        </button>
+        } @else {
+        <a routerLink="/login"
+          class="text-xs font-black uppercase tracking-widest px-6 py-2 border-2 border-yellow-500/50 rounded-full hover:bg-yellow-500 hover:text-black transition-all">
+          {{ 'NAV.VAULT' | translate }}
+        </a>
+        }
+      </div>
+
+    </div>
+  </div>
+</nav>

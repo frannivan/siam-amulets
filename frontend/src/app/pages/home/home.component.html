@@ -1,0 +1,167 @@
+<!-- Hero Carousel -->
+<div class="relative w-full h-[60vh] overflow-hidden bg-gray-900">
+    @if (loading) {
+    <div class="flex items-center justify-center h-full text-white">
+        <span class="animate-pulse text-2xl uppercase font-black tracking-widest">{{ 'HOME.NO_PRODUCTS' | translate
+            }}</span>
+    </div>
+    } @else if (products.length > 0) {
+    <!-- Slides -->
+    <div class="relative h-full transition-all duration-500 ease-in-out">
+        <div class="absolute inset-0">
+            <img [src]="getHeroImage(products[currentSlide])" class="w-full h-full object-cover opacity-50">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
+            <span class="text-yellow-400 font-bold tracking-widest text-sm uppercase mb-2 animate-bounce">
+                {{ 'NAV.SACRED_RELICS' | translate }}
+            </span>
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">{{ products[currentSlide].name }}</h1>
+            <p class="text-xl md:text-2xl mb-8 font-light max-w-2xl">{{ products[currentSlide].description }}</p>
+            <div class="flex gap-4">
+                <a routerLink="/product/{{ products[currentSlide].slug }}"
+                    class="px-8 py-3 bg-yellow-500 text-black font-bold rounded-full hover:bg-yellow-400 transition-all transform hover:scale-105 shadow-lg uppercase text-xs tracking-widest">
+                    {{ 'HOME.ADD_TO_CART' | translate }}
+                </a>
+                <span class="px-8 py-3 border border-white/30 rounded-full backdrop-blur-sm">
+                    \${{ products[currentSlide].price }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <button (click)="prevSlide()"
+        class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-3 rounded-full backdrop-blur-sm transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+            class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+    </button>
+    <button (click)="nextSlide()"
+        class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-3 rounded-full backdrop-blur-sm transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+            class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+        </svg>
+    </button>
+
+    <!-- Indicators -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+        @for (prod of products; track prod.id; let i = $index) {
+        <button (click)="currentSlide = i" class="w-2 h-2 rounded-full transition-all"
+            [class.bg-yellow-500]="currentSlide === i" [class.w-8]="currentSlide === i"
+            [class.bg-white/50]="currentSlide !== i">
+        </button>
+        }
+    </div>
+    } @else {
+    <div class="flex items-center justify-center h-full text-white">
+        <p class="uppercase font-black tracking-widest text-gray-500">{{ 'HOME.NO_PRODUCTS' | translate }}</p>
+    </div>
+    }
+</div>
+
+
+<!-- All Products Grid -->
+<div class="container mx-auto px-4 py-12">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+        <div>
+            <h2 class="text-3xl font-black text-gray-900 border-l-4 border-yellow-500 pl-4 uppercase tracking-wider">
+                {{ (searchQuery ? 'HOME.SEARCH_RESULTS' : 'HOME.FULL_COLLECTION') | translate }}
+            </h2>
+            @if (searchQuery) {
+            <p class="text-sm text-gray-400 font-bold mt-1 ml-4 uppercase tracking-tighter">
+                {{ 'HOME.FOUND_RESULTS' | translate:{ count: products.length } }}
+            </p>
+            }
+        </div>
+
+        <!-- Integrated Search Bar -->
+        <div class="relative w-full md:w-96 group">
+            <span
+                class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-yellow-500 transition-colors text-xl">search</span>
+            <input type="text" [(ngModel)]="searchQuery" (input)="onSearch(searchQuery)"
+                [placeholder]="'HOME.SEARCH_PLACEHOLDER' | translate"
+                class="w-full pl-12 pr-12 py-3 bg-white border border-gray-200 rounded-xl focus:ring-4 focus:ring-yellow-500/10 focus:border-yellow-500 outline-none transition-all text-sm font-bold text-gray-800 placeholder-gray-400 shadow-sm">
+
+            @if (searchQuery) {
+            <button (click)="searchQuery = ''; onSearch('')"
+                class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 transition-colors">
+                <span class="material-icons text-lg">close</span>
+            </button>
+            }
+        </div>
+    </div>
+
+    @if (errorMsg) {
+    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-8">
+        <p class="font-bold">Error</p>
+        <p>{{ errorMsg }}</p>
+    </div>
+    }
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        @for (product of products; track product.id) {
+        <div
+            class="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1 border border-gray-100 flex flex-col h-full">
+            <!-- Image Carousel Card -->
+            <div class="relative aspect-[4/5] overflow-hidden bg-gray-100 group/card cursor-pointer"
+                [routerLink]="['/product', product.slug]">
+                <img [src]="getPrimaryImage(product)" alt="{{ product.name }}"
+                    class="w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110">
+
+                <!-- Mini Arrows on Hover -->
+                <div
+                    class="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity flex items-center justify-between px-3 pointer-events-none z-10">
+                    <button (click)="prevImage($event, product)"
+                        class="pointer-events-auto bg-white/95 p-1.5 rounded-full text-yellow-600 shadow-xl scale-90 hover:scale-100 transition-transform flex items-center justify-center border border-gray-100">
+                        <span class="material-icons text-base">chevron_left</span>
+                    </button>
+                    <button (click)="nextImage($event, product)"
+                        class="pointer-events-auto bg-white/95 p-1.5 rounded-full text-yellow-600 shadow-xl scale-90 hover:scale-100 transition-transform flex items-center justify-center border border-gray-100">
+                        <span class="material-icons text-base">chevron_right</span>
+                    </button>
+                </div>
+
+                <!-- Badge: Current Image Index -->
+                @if (product.images && product.images.length > 1) {
+                <div
+                    class="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md text-white text-[10px] px-2 py-0.5 rounded font-black border border-white/20 opacity-0 group-hover/card:opacity-100 transition-opacity tracking-tighter">
+                    {{ (product.currentIndex || 0) + 1 }} / {{ product.images.length }}
+                </div>
+                }
+
+                <div
+                    class="absolute top-2 right-2 bg-yellow-500 text-white text-[10px] font-black px-2 py-1 rounded-full shadow opacity-0 group-hover/card:opacity-100 transition-opacity tracking-widest uppercase">
+                    View
+                </div>
+            </div>
+
+            <!-- Info -->
+            <div class="p-5 flex flex-col flex-grow">
+                <h3
+                    class="text-lg font-bold text-gray-800 mb-2 group-hover:text-yellow-600 transition-colors line-clamp-2">
+                    {{ product.name }}
+                </h3>
+                <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
+                    <span class="text-xl font-bold text-gray-900">\${{ product.price }}</span>
+                    <div class="flex gap-2">
+                        <button (click)="addToCart($event, product)"
+                            class="p-2 bg-yellow-50 text-yellow-600 rounded-lg hover:bg-yellow-500 hover:text-white transition-colors duration-300 shadow-sm flex items-center justify-center group/btn">
+                            <span
+                                class="material-icons text-xl group-hover/btn:scale-110 transition-transform">shopping_bag</span>
+                        </button>
+                        <a routerLink="/product/{{ product.slug }}"
+                            class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-500 hover:text-white transition-colors duration-300 shadow-sm flex items-center">
+                            {{ 'HOME.ADD_TO_CART' | translate }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>

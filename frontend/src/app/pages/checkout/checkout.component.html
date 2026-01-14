@@ -1,0 +1,233 @@
+<div class="min-h-screen bg-gray-50 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Steps Indicator -->
+        <div class="max-w-2xl mx-auto mb-12">
+            <div class="flex items-center justify-between relative">
+                <div class="absolute inset-0 top-5 h-0.5 bg-gray-200 -z-10"></div>
+                <div class="absolute inset-0 top-5 h-0.5 bg-yellow-500 transition-all duration-500 -z-0"
+                    [style.width.%]="(currentStep() - 1) * 50"></div>
+
+                <div class="flex flex-col items-center">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all"
+                        [class.bg-yellow-500]="currentStep() >= 1" [class.text-black]="currentStep() >= 1"
+                        [class.bg-white]="currentStep() < 1" [class.border-2]="currentStep() < 1">1</div>
+                    <span class="text-[10px] mt-2 font-black uppercase tracking-widest text-gray-400">{{
+                        'CHECKOUT.SHIPPING_DETAILS' | translate }}</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all"
+                        [class.bg-yellow-500]="currentStep() >= 2" [class.text-black]="currentStep() >= 2"
+                        [class.bg-white]="currentStep() < 2" [class.border-2]="currentStep() < 2"
+                        [class.border-gray-200]="currentStep() < 2">2</div>
+                    <span class="text-[10px] mt-2 font-black uppercase tracking-widest text-gray-400">{{
+                        'CHECKOUT.PAYMENT_METHOD' | translate }}</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all"
+                        [class.bg-yellow-500]="currentStep() >= 3" [class.text-black]="currentStep() >= 3"
+                        [class.bg-white]="currentStep() < 3" [class.border-2]="currentStep() < 3"
+                        [class.border-gray-200]="currentStep() < 3">3</div>
+                    <span class="text-[10px] mt-2 font-black uppercase tracking-widest text-gray-400">{{
+                        'CHECKOUT.CONFIRM' | translate }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+
+            <div class="lg:col-span-2">
+                <!-- Step 1: Shipping -->
+                @if (currentStep() === 1) {
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 animate-fadeIn">
+                    <h2
+                        class="text-2xl font-black text-gray-900 mb-8 uppercase tracking-widest border-b border-gray-50 pb-4">
+                        {{ 'CHECKOUT.SHIPPING_DETAILS' | translate }}</h2>
+                    <form (ngSubmit)="nextStep()" class="space-y-6">
+                        <div class="grid grid-cols-1 gap-6">
+                            <div>
+                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">{{
+                                    'CHECKOUT.STREET' | translate }}</label>
+                                <input type="text" [(ngModel)]="shippingInfo.address" name="address" required
+                                    class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-yellow-500 outline-none transition-all">
+                            </div>
+                            <div class="grid grid-cols-2 gap-6">
+                                <div>
+                                    <label
+                                        class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">{{
+                                        'CHECKOUT.CITY' | translate }}</label>
+                                    <input type="text" [(ngModel)]="shippingInfo.city" name="city" required
+                                        class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-yellow-500 outline-none transition-all">
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">{{
+                                        'CHECKOUT.ZIP' | translate }}</label>
+                                    <input type="text" [(ngModel)]="shippingInfo.zipCode" name="zipCode" required
+                                        class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-yellow-500 outline-none transition-all">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-6">
+                            <button type="submit"
+                                class="w-full py-5 bg-gray-900 text-white rounded-2xl font-black text-lg hover:bg-black transition-all shadow-xl">
+                                {{ 'CHECKOUT.CONTINUE' | translate }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                }
+
+                <!-- Step 2: Payment -->
+                @if (currentStep() === 2) {
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 animate-fadeIn">
+                    <h2
+                        class="text-2xl font-black text-gray-900 mb-8 uppercase tracking-widest border-b border-gray-50 pb-4">
+                        {{ 'CHECKOUT.PAYMENT_METHOD' | translate }}</h2>
+                    <div class="grid grid-cols-1 gap-4">
+                        <!-- Credit Card -->
+                        <button (click)="setPaymentMethod('CREDIT_CARD')"
+                            class="flex items-center justify-between p-6 rounded-2xl border-2 transition-all group"
+                            [class.border-yellow-500]="paymentMethod() === 'CREDIT_CARD'"
+                            [class.bg-yellow-50]="paymentMethod() === 'CREDIT_CARD'"
+                            [class.border-gray-100]="paymentMethod() !== 'CREDIT_CARD'">
+                            <div class="flex items-center gap-4">
+                                <span
+                                    class="material-icons text-3xl group-hover:text-yellow-600 transition-colors">credit_card</span>
+                                <div class="text-left">
+                                    <p class="font-bold text-gray-900">Credit or Debit Card</p>
+                                    <p class="text-xs text-gray-400 font-medium">Visa, Mastercard, AMEX</p>
+                                </div>
+                            </div>
+                            @if (paymentMethod() === 'CREDIT_CARD') {
+                            <span class="material-icons text-yellow-600">check_circle</span>
+                            }
+                        </button>
+
+                        <!-- PayPal -->
+                        <button (click)="setPaymentMethod('PAYPAL')"
+                            class="flex items-center justify-between p-6 rounded-2xl border-2 transition-all group"
+                            [class.border-yellow-500]="paymentMethod() === 'PAYPAL'"
+                            [class.bg-yellow-50]="paymentMethod() === 'PAYPAL'"
+                            [class.border-gray-100]="paymentMethod() !== 'PAYPAL'">
+                            <div class="flex items-center gap-4">
+                                <span
+                                    class="material-icons text-3xl group-hover:text-yellow-600 transition-colors">account_balance_wallet</span>
+                                <div class="text-left">
+                                    <p class="font-bold text-gray-900">PayPal</p>
+                                    <p class="text-xs text-gray-400 font-medium">Fast and secure checkout</p>
+                                </div>
+                            </div>
+                            @if (paymentMethod() === 'PAYPAL') {
+                            <span class="material-icons text-yellow-600">check_circle</span>
+                            }
+                        </button>
+
+                        <!-- Bank Transfer -->
+                        <button (click)="setPaymentMethod('TRANSFER')"
+                            class="flex items-center justify-between p-6 rounded-2xl border-2 transition-all group"
+                            [class.border-yellow-500]="paymentMethod() === 'TRANSFER'"
+                            [class.bg-yellow-50]="paymentMethod() === 'TRANSFER'"
+                            [class.border-gray-100]="paymentMethod() !== 'TRANSFER'">
+                            <div class="flex items-center gap-4">
+                                <span
+                                    class="material-icons text-3xl group-hover:text-yellow-600 transition-colors">account_balance</span>
+                                <div class="text-left">
+                                    <p class="font-bold text-gray-900">Bank Transfer</p>
+                                    <p class="text-xs text-gray-400 font-medium">Manual verification required</p>
+                                </div>
+                            </div>
+                            @if (paymentMethod() === 'TRANSFER') {
+                            <span class="material-icons text-yellow-600">check_circle</span>
+                            }
+                        </button>
+                    </div>
+
+                    <button (click)="prevStep()"
+                        class="mt-8 text-sm font-black text-gray-400 uppercase tracking-widest hover:text-gray-600 flex items-center gap-2">
+                        <span class="material-icons text-base">arrow_back</span> {{ 'CHECKOUT.BACK' | translate }}
+                    </button>
+                </div>
+                }
+
+                <!-- Step 3: Confirmation -->
+                @if (currentStep() === 3) {
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 animate-fadeIn text-center">
+                    <span class="material-icons text-7xl text-yellow-500 mb-4 scale-125">auto_awesome</span>
+                    <h2 class="text-2xl font-black text-gray-900 mb-2 uppercase tracking-widest">{{ 'CHECKOUT.CONFIRM' |
+                        translate }}</h2>
+                    <p class="text-gray-500 mb-8 max-w-sm mx-auto">Please review your delivery details and order summary
+                        before finalizing the transaction.</p>
+
+                    <div class="bg-gray-50 rounded-2xl p-6 text-left mb-8 border border-gray-100">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-1">Shipping
+                                    To</p>
+                                <p class="text-sm font-bold text-gray-900">{{ shippingInfo.address }}, {{
+                                    shippingInfo.city }}</p>
+                            </div>
+                            <button (click)="currentStep.set(1)"
+                                class="text-[10px] font-black text-yellow-600 uppercase">Change</button>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-1">Payment
+                                Method</p>
+                            <p class="text-sm font-bold text-gray-900">{{ paymentMethod() | titlecase }}</p>
+                        </div>
+                    </div>
+
+                    <button (click)="placeOrder()" [disabled]="loading()"
+                        class="w-full py-5 bg-gray-900 text-white rounded-2xl font-black text-xl hover:bg-black transition-all shadow-2xl flex items-center justify-center gap-3 disabled:opacity-50">
+                        @if (loading()) {
+                        <span class="animate-spin material-icons">refresh</span>
+                        {{ 'CHECKOUT.PROCESSING' | translate }}
+                        } @else {
+                        <span class="material-icons">gavel</span>
+                        {{ 'CHECKOUT.PLACE_ORDER' | translate }}
+                        }
+                    </button>
+                </div>
+                }
+            </div>
+
+            <!-- Sidebar: Summary -->
+            <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 lg:sticky lg:top-8">
+                <h2
+                    class="text-xl font-black text-gray-900 mb-6 uppercase tracking-wider pb-4 border-b border-gray-100 text-center">
+                    {{ 'CART.SUMMARY' | translate }}</h2>
+
+                <div class="max-h-60 overflow-y-auto space-y-4 mb-6 pr-2">
+                    @for (item of cart().items; track item.id) {
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                            <img [src]="getFormattedImageUrl(item.product.images?.[0]?.imageUrl)"
+                                class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-grow">
+                            <p class="text-xs font-bold text-gray-900 line-clamp-1">{{ item.product.name }}</p>
+                            <p class="text-[10px] text-gray-400">Qty: {{ item.quantity }} x \${{ item.product.price }}
+                            </p>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                <div class="space-y-3 mb-4">
+                    <div class="flex justify-between text-sm text-gray-500">
+                        <span>{{ 'CART.SUBTOTAL' | translate }}</span>
+                        <span class="font-bold text-gray-900">\${{ subtotal }}</span>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-500">
+                        <span>{{ 'CART.SHIPPING' | translate }}</span>
+                        <span class="font-bold text-gray-900">\${{ shipping }}</span>
+                    </div>
+                    <div class="pt-4 border-t border-gray-100 flex justify-between items-center">
+                        <span class="text-sm font-black uppercase text-gray-900">{{ 'CART.TOTAL' | translate }}</span>
+                        <span class="text-2xl font-black text-yellow-600">\${{ total }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

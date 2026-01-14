@@ -1,0 +1,28 @@
+<div class="admin-container" style="padding: 2rem;">
+    <h2>Admin Dashboard</h2>
+    <div class="stats-grid"
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem;">
+        <div class="card"
+            style="padding: 1.5rem; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h3>Products</h3>
+            <p style="font-size: 2rem; font-weight: bold; color: var(--primary-color);">Manage</p>
+            <a routerLink="/admin/products" class="btn btn-primary" style="margin-top: 1rem;">View All</a>
+        </div>
+
+        <div class="card"
+            style="padding: 1.5rem; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h3>Users</h3>
+            <!-- Placeholder count or icon -->
+            <p style="font-size: 2rem; font-weight: bold; color: var(--primary-color);">Manage</p>
+            <a routerLink="/admin/users" class="btn btn-primary" style="margin-top: 1rem;">View All</a>
+        </div>
+
+        <div class="card"
+            style="padding: 1.5rem; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h3>Orders</h3>
+            <p style="font-size: 2rem; font-weight: bold; color: var(--primary-color);">Coming Soon</p>
+            <button disabled class="btn" style="margin-top: 1rem; background: #ccc; cursor: not-allowed;">View
+                All</button>
+        </div>
+    </div>
+</div>

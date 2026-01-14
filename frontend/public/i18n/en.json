@@ -1,0 +1,71 @@
+{
+    "NAV": {
+        "HOME": "Home",
+        "VAULT": "Enter Vault",
+        "LOGOUT": "Logout",
+        "ADMIN": "Admin",
+        "SACRED_RELICS": "Sacred Relics & Collection"
+    },
+    "HOME": {
+        "SEARCH_PLACEHOLDER": "Search collection...",
+        "FULL_COLLECTION": "Full Collection",
+        "SEARCH_RESULTS": "Search Results",
+        "FOUND_RESULTS": "Found {{count}} masterpieces matching your search",
+        "NO_PRODUCTS": "No products available.",
+        "ADD_TO_CART": "Add to Collection"
+    },
+    "CART": {
+        "TITLE": "Sacred Repository",
+        "EMPTY": "Your repository is empty",
+        "BACK_TO_HOME": "Return to Home",
+        "SUMMARY": "Selection Summary",
+        "SUBTOTAL": "Amulets Subtotal",
+        "SHIPPING": "Handling & Shipping",
+        "TOTAL": "Total Offering",
+        "CHECKOUT": "Proceed to Checkout",
+        "SECURE": "Secure checkout powered by Siam Gate",
+        "REMOVE": "Remove"
+    },
+    "CHECKOUT": {
+        "SHIPPING_DETAILS": "Shipping Details",
+        "STREET": "Street Address",
+        "CITY": "City",
+        "ZIP": "Zip Code",
+        "CONTINUE": "Continue to Payment",
+        "PAYMENT_METHOD": "Select Payment Method",
+        "BACK": "Back to Shipping",
+        "CONFIRM": "Confirm Your Order",
+        "PLACE_ORDER": "Place Final Order",
+        "PROCESSING": "Processing...",
+        "SUCCESS": "Order placed successfully!",
+        "FAILED": "Checkout failed. Please try again."
+    },
+    "DETAIL": {
+        "HOME_LINK": "Home",
+        "PRODUCT_DETAILS": "Product Details",
+        "LOADING": "Loading Sacred Amulet...",
+        "SIAM_MASTERPIECE": "Siam Masterpiece",
+        "AVAILABLE": "Available",
+        "OUT_OF_STOCK": "Out of Stock",
+        "DESCRIPTION": "Description",
+        "ADD_TO_CART": "ADD TO COLLECTION",
+        "CONSULT": "CONSULT WITH MASTER",
+        "NOT_FOUND": "Amulet Not Found",
+        "NOT_FOUND_DESC": "The sacred item you are looking for might have moved or been collected."
+    },
+    "AUTH": {
+        "LOGIN": "Login",
+        "EMAIL": "Email",
+        "PASSWORD": "Password",
+        "SIGN_IN": "Sign In",
+        "NO_ACCOUNT": "Don't have an account?",
+        "REGISTER_HERE": "Register here",
+        "REGISTER": "Create Account",
+        "FIRST_NAME": "First Name",
+        "LAST_NAME": "Last Name",
+        "CONFIRM_PASSWORD": "Confirm Password",
+        "SIGN_UP": "Register",
+        "ALREADY_HAVE": "Already have an account?",
+        "LOGIN_HERE": "Login here"
+    }
+}

@@ -1,0 +1,63 @@
+<div class="container mx-auto px-4 py-8">
+    <h2 class="text-3xl font-bold text-gray-800 mb-8 border-l-4 border-yellow-500 pl-4">Our Collection</h2>
+
+    <!-- Temporary Debug Info -->
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4" role="alert">
+        <p class="font-bold">System Status</p>
+        <p>{{ debugMessage }}</p>
+    </div>
+
+    <div class="mb-8 flex justify-center sm:justify-start">
+        <input type="text" placeholder="Search amulets..."
+            class="w-full sm:w-96 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-sm transition-all bg-gray-50 focus:bg-white text-gray-700 placeholder-gray-400">
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        @if (loading) {
+        <div class="col-span-full py-12 flex justify-center text-gray-400">
+            <span class="animate-pulse">Loading products...</span>
+        </div>
+        } @else {
+        @for (product of products; track product.id) {
+        <div
+            class="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1 border border-gray-100 flex flex-col h-full">
+
+            <!-- Product Image -->
+            <div class="relative aspect-[4/5] overflow-hidden bg-gray-100">
+                <img [src]="getPrimaryImage(product)" alt="{{ product.name }}"
+                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+
+                <!-- Overlay Badge (Optional) -->
+                <div
+                    class="absolute top-2 right-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow opacity-0 group-hover:opacity-100 transition-opacity">
+                    VIEW
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="p-5 flex flex-col flex-grow">
+                <h3
+                    class="text-lg font-bold text-gray-800 mb-2 group-hover:text-yellow-600 transition-colors line-clamp-2">
+                    {{ product.name }}
+                </h3>
+
+                <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
+                    <span class="text-xl font-bold text-gray-900">\${{ product.price }}</span>
+
+                    <a routerLink="/product/{{ product.slug }}"
+                        class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-500 hover:text-white transition-colors duration-300 shadow-sm">
+                        Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        }
+        }
+
+        @if (!loading && products.length === 0) {
+        <div class="col-span-full text-center py-12 text-gray-500">
+            <p>No products found.</p>
+        </div>
+        }
+    </div>
+</div>
