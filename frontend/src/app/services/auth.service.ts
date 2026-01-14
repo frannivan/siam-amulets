@@ -77,6 +77,7 @@ export class AuthService {
             // Simple base64 decode of JWT payload (2nd part)
             const p = JSON.parse(atob(token.split('.')[1]));
             const roles = p.role || p.roles || p.authorities || [];
+
             if (typeof roles === 'string') {
                 return roles === 'ADMIN' || roles === 'ROLE_ADMIN';
             }

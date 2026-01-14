@@ -19,11 +19,15 @@ public class JwtUtils {
     }
 
     public String generateJwtToken(Authentication authentication) {
-        // Simple implementation using username as subject
-        String username = authentication.getName(); // In our case email
+        String username = authentication.getName();
+        String role = authentication.getAuthorities().stream()
+                .findFirst()
+                .map(item -> item.getAuthority())
+                .orElse("ROLE_USER");
 
         return Jwts.builder()
                 .setSubject(username)
+                .claim("role", role) // Add role claim
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(key)

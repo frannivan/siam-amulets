@@ -12,7 +12,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
     templateUrl: './login.component.html'
 })
 export class LoginComponent {
-    credentials: LoginRequest = { email: 'admin@amulets.siam', password: 'admin123' };
+    credentials: LoginRequest = { email: 'admin@example.com', password: 'password' };
     errorMessage = '';
 
     constructor(private authService: AuthService) { }
