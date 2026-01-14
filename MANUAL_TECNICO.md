@@ -9,6 +9,13 @@ Este documento detalla los pasos necesarios para desplegar la aplicación **Amul
 *   **Sistema Operativo**: Ubuntu 22.04 o Oracle Linux 8/9.
 *   **Git**: Instalado localmente para subir el código.
 
+### 1.1 Cómo obtener la IP Pública
+1.  Inicie sesión en **Oracle Cloud Console**.
+2.  Vaya al menú de hamburguesa -> **Compute** -> **Instances**.
+3.  Haga clic en el nombre de su instancia.
+4.  En la sección "Instance Information" (a la derecha o arriba), busque **Public IP Address**.
+5.  Esa es la IP que usará para conectarse.
+
 ## 2. Preparación del Repositorio (Local)
 
 El proyecto ya está configurado con Docker. Asegúrese de subir los cambios al repositorio remoto:
