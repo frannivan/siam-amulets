@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { OrderService } from '../../services/order.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
@@ -9,7 +9,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 @Component({
     selector: 'app-checkout',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterLink, TranslatePipe],
+    imports: [CommonModule, FormsModule, TranslatePipe],
     templateUrl: './checkout.component.html'
 })
 export class CheckoutComponent {
