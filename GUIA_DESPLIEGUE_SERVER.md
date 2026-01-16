@@ -61,7 +61,7 @@ chmod +x mvnw
 
 2. Sube el archivo `.jar` al servidor usando `scp`:
    ```bash
-   scp -i /Users/franivan/ssh-key-2022-11-03.key target/backend-0.0.1-SNAPSHOT.jar ubuntu@143.47.101.209:~/proyects/siam-amulets/backend/target/
+   scp -i ~/Downloads/ssh-key-2026-01-09.key target/backend-0.0.1-SNAPSHOT.jar ubuntu@143.47.101.209:~/proyects/siam-amulets/backend/target/
    ```
    *(Ajusta la ruta de la llave si es diferente y el usuario `ubuntu` por `opc` si usas Oracle Linux).*
 
@@ -72,9 +72,9 @@ Vamos a generar los archivos estáticos para la web.
 
 ### BarberShop (Frontend)
 ```bash
-cd ~/proyects/BarberShop/frontend
+cd ~/proyects/BarberShopUAT/frontend
 npm install --legacy-peer-deps
-ng build --configuration production
+npx ng build --configuration production
 ```
 *Los archivos quedarán en `dist/barbershop-frontend`.*
 
@@ -82,7 +82,7 @@ ng build --configuration production
 ```bash
 cd ~/proyects/siam-amulets/frontend
 npm install
-ng build --configuration production
+npx ng build --configuration production
 ```
 *Los archivos quedarán en `dist/amulets-frontend` (o nombre similar).*
 
