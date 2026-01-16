@@ -61,9 +61,9 @@ chmod +x mvnw
 
 2. Sube el archivo `.jar` al servidor usando `scp`:
    ```bash
-   scp target/backend-0.0.1-SNAPSHOT.jar opc@143.47.101.209:~/proyects/siam-amulets/backend/target/
+   scp -i /Users/franivan/ssh-key-2022-11-03.key target/backend-0.0.1-SNAPSHOT.jar ubuntu@143.47.101.209:~/proyects/siam-amulets/backend/target/
    ```
-   *(Asegúrate de que la carpeta `target` exista en el servidor, si no, créala antes con `mkdir -p ~/proyects/siam-amulets/backend/target`).*
+   *(Ajusta la ruta de la llave si es diferente y el usuario `ubuntu` por `opc` si usas Oracle Linux).*
 
 ---
 
