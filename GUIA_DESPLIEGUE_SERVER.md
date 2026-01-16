@@ -18,13 +18,13 @@ Ve a la carpeta de cada proyecto y descarga los últimos cambios que acabamos de
 
 ### BarberShop
 ```bash
-cd ~/BarberShop  # O la ruta donde tengas este proyecto
+cd ~/proyects/BarberShop  # Ruta de tu servidor
 git pull origin main
 ```
 
 ### AmuletsOfSiam
 ```bash
-cd ~/AmuletsOfSiam # O la ruta donde tengas este proyecto
+cd ~/proyects/siam-amulets # Ruta de tu servidor
 git pull origin main
 ```
 
@@ -37,7 +37,7 @@ Vamos a generar los archivos `.jar` actualizados.
 
 ### BarberShop (Backend)
 ```bash
-cd ~/BarberShop/backend
+cd ~/proyects/BarberShop/backend
 chmod +x mvnw
 ./mvnw clean package -DskipTests
 ```
@@ -45,7 +45,7 @@ chmod +x mvnw
 
 ### AmuletsOfSiam (Backend)
 ```bash
-cd ~/AmuletsOfSiam/backend
+cd ~/proyects/siam-amulets/backend
 chmod +x mvnw
 ./mvnw clean package -DskipTests
 ```
@@ -58,7 +58,7 @@ Vamos a generar los archivos estáticos para la web.
 
 ### BarberShop (Frontend)
 ```bash
-cd ~/BarberShop/frontend
+cd ~/proyects/BarberShop/frontend
 npm install --legacy-peer-deps
 ng build --configuration production
 ```
@@ -66,7 +66,7 @@ ng build --configuration production
 
 ### AmuletsOfSiam (Frontend)
 ```bash
-cd ~/AmuletsOfSiam/frontend
+cd ~/proyects/siam-amulets/frontend
 npm install
 ng build --configuration production
 ```
@@ -82,13 +82,13 @@ Necesitamos decirle a Nginx cómo manejar ambos proyectos.
    **BarberShop:**
    ```bash
    sudo mkdir -p /var/www/barbershop
-   sudo cp -r ~/BarberShop/frontend/dist/barbershop-frontend/* /var/www/barbershop/
+   sudo cp -r ~/proyects/BarberShop/frontend/dist/barbershop-frontend/* /var/www/barbershop/
    ```
 
    **AmuletsOfSiam:**
    ```bash
    sudo mkdir -p /var/www/amulets
-   sudo cp -r ~/AmuletsOfSiam/frontend/dist/siam-amulets/* /var/www/amulets/
+   sudo cp -r ~/proyects/siam-amulets/frontend/dist/siam-amulets/* /var/www/amulets/
    # (Verifica el nombre exacto de la carpeta dentro de dist/ si es diferente)
    ```
 
@@ -157,7 +157,7 @@ sudo systemctl restart barbershop
 ```
 *Si no tienes servicio, ejecútalo manualmente (temporal):*
 ```bash
-nohup java -jar ~/BarberShop/backend/target/backend-0.0.1-SNAPSHOT.jar > barbershop.log 2>&1 &
+nohup java -jar ~/proyects/BarberShop/backend/target/backend-0.0.1-SNAPSHOT.jar > barbershop.log 2>&1 &
 ```
 
 ### AmuletsOfSiam (Puerto 8081)
@@ -167,7 +167,7 @@ sudo systemctl restart amulets
 ```
 *Si no tienes servicio, ejecútalo manualmente (temporal):*
 ```bash
-nohup java -jar ~/AmuletsOfSiam/backend/target/backend-0.0.1-SNAPSHOT.jar > amulets.log 2>&1 &
+nohup java -jar ~/proyects/siam-amulets/backend/target/backend-0.0.1-SNAPSHOT.jar > amulets.log 2>&1 &
 ```
 
 ---
