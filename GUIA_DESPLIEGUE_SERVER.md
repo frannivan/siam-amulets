@@ -1,199 +1,175 @@
-# Guía Paso a Paso para Despliegue en Oracle Cloud
+# Guía Maestra de Despliegue en Oracle Cloud
+*(Actualizada 16 Enero 2026 - Probada y Funcionando)*
 
-Esta guía te explicará exactamente qué comandos ejecutar en tu servidor para poner a funcionar **BarberShop** (Puerto 8080) y **AmuletsOfSiam** (Puerto 8081).
-
----
-
-## 🚀 Paso 1: Conectarse al Servidor
-Abre tu terminal en tu computadora y conéctate por SSH (usa tu comando habitual):
-```bash
-ssh opc@143.47.101.209
-# (O el usuario que uses normalmente, ej. ubuntu, root)
-```
+Esta guía cubre el despliegue de **BarberShop** (Puerto 8080) y **AmuletsOfSiam** (Puerto 8081) en la misma instancia de Oracle Cloud.
 
 ---
 
-## 📦 Paso 2: Actualizar el Código
-Ve a la carpeta de cada proyecto y descarga los últimos cambios que acabamos de subir.
+## 1. Preparación Local (CRÍTICO)
 
-### BarberShop
-```bash
-cd ~/proyects/BarberShop  # Ruta de tu servidor
-git pull origin main
+Antes de subir nada, asegúrate de que tu configuración local sea correcta.
+
+### A. Configurar URLs (http vs https)
+El servidor NO tiene SSL configurado aún. Debes usar `http://` (sin S) en tus archivos de entorno.
+
+**BarberShop (`frontend/src/environments/environment.prod.ts`):**
+```typescript
+export const environment = {
+  production: true,
+  apiUrl: 'http://143.47.101.209/api', // IMPORTANTE: http
+  tenantId: 'barbershop'
+};
 ```
 
-### AmuletsOfSiam
-```bash
-cd ~/proyects/siam-amulets # Ruta de tu servidor
-git pull origin main
+**AmuletsOfSiam (`frontend/src/environments/environment.prod.ts`):**
+```typescript
+export const environment = {
+  production: true,
+  apiUrl: 'http://143.47.101.209/api/amulets' // IMPORTANTE: http
+};
 ```
 
-*(Si te pide credenciales y no las tienes configuradas, tendrás que usar un token o clave SSH).*
+### B. Compilar Frontends (Localmente)
+El servidor tiene poca RAM, así que compilamos en tu Mac y subimos los archivos listos.
 
----
-
-## 🛠 Paso 3: Compilar los Backends (Java)
-**IMPORTANTE:** Si tienes problemas de red en el servidor (errores SSL, tiempos de espera), **compila en TU computadora y sube el archivo (Opción B)**.
-
-### Opción A: Compilar en el Servidor (Si la red funciona bien)
-
-**BarberShop (Backend)**
+**Terminal Local (Mac):**
 ```bash
-cd ~/proyects/BarberShop/backend
-chmod +x mvnw
-./mvnw clean package -DskipTests
-```
-
-**AmuletsOfSiam (Backend)**
-```bash
-cd ~/proyects/siam-amulets/backend
-chmod +x mvnw
-./mvnw clean package -DskipTests
-```
-
-### Opción B: Compilar Localmente y Subir (RECOMENDADO si falla el servidor)
-
-1. En tu computadora (no en el servidor), compila el proyecto:
-   ```bash
-   cd /Users/franivan/Documents/ProyectosWeb/GigAmulets/AmuletsOfSiam/backend
-   ./mvnw clean package -DskipTests
-   ```
-
-2. Sube el archivo `.jar` al servidor usando `scp`:
-   ```bash
-   scp -i ~/Downloads/ssh-key-2026-01-09.key target/backend-0.0.1-SNAPSHOT.jar ubuntu@143.47.101.209:~/proyects/siam-amulets/backend/target/
-   ```
-   *(Ajusta la ruta de la llave si es diferente y el usuario `ubuntu` por `opc` si usas Oracle Linux).*
-
----
-
-## 🎨 Paso 4: Compilar los Frontends (Angular)
-Vamos a generar los archivos estáticos para la web.
-
-### BarberShop (Frontend)
-```bash
-cd ~/proyects/BarberShopUAT/frontend
+# 1. Compilar BarberShop
+cd /Users/franivan/Documents/ProyectosWeb/BarberShop/frontend
 npm install --legacy-peer-deps
-npx ng build --configuration production
+rm -rf dist/ # Limpiar anterior
+ng build --configuration production
+
+# 2. Compilar AmuletsOfSiam
+cd /Users/franivan/Documents/ProyectosWeb/GigAmulets/AmuletsOfSiam/frontend
+npm install
+rm -rf dist/ # Limpiar anterior
+ng build --configuration production
 ```
-*Los archivos quedarán en `dist/barbershop-frontend`.*
-
-### AmuletsOfSiam (Frontend) - RECOMENDADO: SUBIR DESDE TU LOCAL
-Dado que el servidor puede fallar al compilar, hazlo en tu máquina:
-
-1. **En tu máquina (Terminal Local):**
-   ```bash
-   cd /Users/franivan/Documents/ProyectosWeb/GigAmulets/AmuletsOfSiam/frontend
-   npm install && ng build --configuration production
-   ```
-
-2. **Subir archivos al servidor:**
-   ```bash
-   scp -r -i ~/Downloads/ssh-key-2026-01-09.key dist/frontend ubuntu@143.47.101.209:~/frontend-amulets
-   ```
-   *(Esto dejará los archivos en la carpeta `~/frontend-amulets` de tu servidor).*
 
 ---
 
-## ⚙️ Paso 5: Configurar Nginx (Servidor Web)
-Necesitamos decirle a Nginx cómo manejar ambos proyectos.
+## 2. Subir Archivos al Servidor
 
-1. **Copiar archivos del frontend al directorio web:**
-   
-   **BarberShop:**
-   ```bash
-   sudo mkdir -p /var/www/barbershop
-   sudo cp -r ~/proyects/BarberShopUAT/frontend/dist/barbershop-frontend/* /var/www/barbershop/
-   ```
+Usamos `scp` para subir las carpetas `dist`.
 
-   **AmuletsOfSiam (Si subiste dende local):**
-   ```bash
-   sudo mkdir -p /var/www/amulets
-   # Copiamos desde la carpeta que subimos con SCP (frontend-amulets)
-   sudo cp -r ~/frontend-amulets/* /var/www/amulets/
-   ```
+**Terminal Local (Mac):**
+```bash
+# Sube BarberShop (Crear carpeta temporal primero)
+ssh -i ~/Downloads/ssh-key-2026-01-09.key ubuntu@143.47.101.209 "mkdir -p ~/barbershop-files"
+scp -r -i ~/Downloads/ssh-key-2026-01-09.key /Users/franivan/Documents/ProyectosWeb/BarberShop/frontend/dist/barbershop-frontend/* ubuntu@143.47.101.209:~/barbershop-files
 
-2. **Configurar Nginx:**
-   Edita el archivo de configuración:
-   ```bash
-   sudo nano /etc/nginx/sites-available/default
-   # O si usas conf.d: sudo nano /etc/nginx/conf.d/default.conf
-   ```
-
-   **Borra todo y pega esto (es una versión simplificada del archivo que te mostré antes):**
-
-   ```nginx
-   server {
-       listen 80;
-       server_name _;
-
-       # --- PROYECTO 1: BARBERSHOP ---
-       # Frontend
-       location / {
-           root /var/www/barbershop;
-           try_files $uri $uri/ /index.html;
-       }
-       # Backend (API)
-       location /api/ {
-           proxy_pass http://localhost:8080/api/;
-           proxy_set_header Host $host;
-           proxy_set_header X-Real-IP $remote_addr;
-           add_header 'Access-Control-Allow-Origin' '*';
-       }
-
-       # --- PROYECTO 2: AMULETS OF SIAM ---
-       # Frontend (Accesible en /amulets)
-       location /amulets/ {
-           alias /var/www/amulets/;
-           try_files $uri $uri/ /amulets/index.html;
-       }
-       # Backend (API)
-       location /api/amulets/ {
-           proxy_pass http://localhost:8081/api/;
-           proxy_set_header Host $host;
-           proxy_set_header X-Real-IP $remote_addr;
-           add_header 'Access-Control-Allow-Origin' '*';
-       }
-   }
-   ```
-
-3. **Guardar y Reiniciar Nginx:**
-   - Presiona `Ctrl + O`, `Enter` para guardar.
-   - Presiona `Ctrl + X` para salir.
-   - Ejecuta:
-     ```bash
-     sudo nginx -t  # Para verificar errores
-     sudo systemctl restart nginx
-     ```
+# Sube AmuletsOfSiam
+ssh -i ~/Downloads/ssh-key-2026-01-09.key ubuntu@143.47.101.209 "mkdir -p ~/amulets-files"
+scp -r -i ~/Downloads/ssh-key-2026-01-09.key /Users/franivan/Documents/ProyectosWeb/GigAmulets/AmuletsOfSiam/frontend/dist/frontend/* ubuntu@143.47.101.209:~/amulets-files
+```
 
 ---
 
-## 🔌 Paso 6: Iniciar los Servicios Java
-Finalmente, encendemos los backends.
+## 3. Instalación en el Servidor
 
-### BarberShop (Puerto 8080)
-Si ya tienes un servicio creado:
+Conéctate por SSH:
 ```bash
-sudo systemctl restart barbershop
-```
-*Si no tienes servicio, ejecútalo manualmente (temporal):*
-```bash
-nohup java -jar ~/proyects/BarberShop/backend/target/backend-0.0.1-SNAPSHOT.jar > barbershop.log 2>&1 &
+ssh -i ~/Downloads/ssh-key-2026-01-09.key ubuntu@143.47.101.209
 ```
 
-### AmuletsOfSiam (Puerto 8081)
-Si ya tienes un servicio creado:
+### A. Mover Frontends a /var/www
+Aquí corregimos el problema común de la carpeta "browser" anidada.
+
+**En el Servidor:**
 ```bash
-sudo systemctl restart amulets
+# 1. BarberShop
+sudo rm -rf /var/www/barbershop/* # Limpiar viejo
+sudo mkdir -p /var/www/barbershop
+sudo mv ~/barbershop-files/* /var/www/barbershop/
+# CORRECCIÓN DE CARPETA 'BROWSER' (Angular 17+)
+if [ -d "/var/www/barbershop/browser" ]; then
+    sudo mv /var/www/barbershop/browser/* /var/www/barbershop/
+    sudo rm -rf /var/www/barbershop/browser
+fi
+
+# 2. AmuletsOfSiam
+sudo rm -rf /var/www/amulets/* # Limpiar viejo
+sudo mkdir -p /var/www/amulets
+sudo mv ~/amulets-files/* /var/www/amulets/
+# CORRECCIÓN DE CARPETA 'BROWSER'
+if [ -d "/var/www/amulets/browser" ]; then
+    sudo mv /var/www/amulets/browser/* /var/www/amulets/
+    sudo rm -rf /var/www/amulets/browser
+fi
+
+# 3. Permisos
+sudo chown -R ubuntu:ubuntu /var/www
+sudo chmod -R 755 /var/www
 ```
-*Si no tienes servicio, ejecútalo manualmente (temporal):*
+
+### B. Iniciar Backends
+Asegurarse de que no haya procesos zombis ocupando los puertos.
+
+**En el Servidor:**
 ```bash
+# 1. Matar procesos viejos (si existen)
+pkill -f "BarberShopUAT"
+pkill -f "siam-amulets"
+
+# 2. Iniciar BarberShop (Puerto 8080)
+cd ~
+nohup java -jar ~/proyects/BarberShopUAT/backend/target/backend-0.0.1-SNAPSHOT.jar > barbershop.log 2>&1 &
+
+# 3. Iniciar Amulets (Puerto 8081)
+cd ~
 nohup java -jar ~/proyects/siam-amulets/backend/target/backend-0.0.1-SNAPSHOT.jar > amulets.log 2>&1 &
 ```
 
 ---
 
-## ✅ Verificación
-Abre en tu navegador:
-- **BarberShop:** `http://143.47.101.209/`
-- **AmuletsOfSiam:** `http://143.47.101.209/amulets/`
+## 4. Configuración Nginx (Definitiva)
+
+Si necesitas resetear la configuración de Nginx:
+
+```bash
+sudo nano /etc/nginx/conf.d/default.conf
+```
+*(Contenido recomendado):*
+```nginx
+server {
+    listen 80;
+    server_name _;
+
+    # --- BARBERSHOP ---
+    location / {
+        root /var/www/barbershop;
+        try_files $uri $uri/ /index.html;
+    }
+    location /api/ {
+        proxy_pass http://localhost:8080/api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        add_header 'Access-Control-Allow-Origin' '*';
+    }
+
+    # --- AMULETS ---
+    location /amulets/ {
+        alias /var/www/amulets/;
+        try_files $uri $uri/ /amulets/index.html;
+    }
+    location /api/amulets/ {
+        proxy_pass http://localhost:8081/api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        add_header 'Access-Control-Allow-Origin' '*';
+    }
+}
+```
+
+Reiniciar Nginx:
+```bash
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+---
+
+## ✅ URLs Finales
+- **BarberShop:** http://143.47.101.209/
+- **Amulets:** http://143.47.101.209/amulets/
