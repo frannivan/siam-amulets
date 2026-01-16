@@ -78,13 +78,20 @@ npx ng build --configuration production
 ```
 *Los archivos quedarán en `dist/barbershop-frontend`.*
 
-### AmuletsOfSiam (Frontend)
-```bash
-cd ~/proyects/siam-amulets/frontend
-npm install
-npx ng build --configuration production
-```
-*Los archivos quedarán en `dist/amulets-frontend` (o nombre similar).*
+### AmuletsOfSiam (Frontend) - RECOMENDADO: SUBIR DESDE TU LOCAL
+Dado que el servidor puede fallar al compilar, hazlo en tu máquina:
+
+1. **En tu máquina (Terminal Local):**
+   ```bash
+   cd /Users/franivan/Documents/ProyectosWeb/GigAmulets/AmuletsOfSiam/frontend
+   npm install && ng build --configuration production
+   ```
+
+2. **Subir archivos al servidor:**
+   ```bash
+   scp -r -i ~/Downloads/ssh-key-2026-01-09.key dist/frontend ubuntu@143.47.101.209:~/frontend-amulets
+   ```
+   *(Esto dejará los archivos en la carpeta `~/frontend-amulets` de tu servidor).*
 
 ---
 
@@ -96,14 +103,14 @@ Necesitamos decirle a Nginx cómo manejar ambos proyectos.
    **BarberShop:**
    ```bash
    sudo mkdir -p /var/www/barbershop
-   sudo cp -r ~/proyects/BarberShop/frontend/dist/barbershop-frontend/* /var/www/barbershop/
+   sudo cp -r ~/proyects/BarberShopUAT/frontend/dist/barbershop-frontend/* /var/www/barbershop/
    ```
 
-   **AmuletsOfSiam:**
+   **AmuletsOfSiam (Si subiste dende local):**
    ```bash
    sudo mkdir -p /var/www/amulets
-   sudo cp -r ~/proyects/siam-amulets/frontend/dist/siam-amulets/* /var/www/amulets/
-   # (Verifica el nombre exacto de la carpeta dentro de dist/ si es diferente)
+   # Copiamos desde la carpeta que subimos con SCP (frontend-amulets)
+   sudo cp -r ~/frontend-amulets/* /var/www/amulets/
    ```
 
 2. **Configurar Nginx:**
