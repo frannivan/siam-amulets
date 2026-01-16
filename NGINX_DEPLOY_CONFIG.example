@@ -1,0 +1,47 @@
+server {
+    listen 80;
+    server_name _;
+
+    # Frontend BarberShop (served from /var/www/barbershop)
+    location / {
+        root /var/www/barbershop;
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Frontend AmuletsOfSiam (served from /var/www/amulets)
+    # Accessible via http://<IP>/amulets/
+    location /amulets/ {
+        alias /var/www/amulets/;
+        try_files $uri $uri/ /amulets/index.html;
+    }
+
+    # Backend BarberShop (Port 8080)
+    location /api/ {
+        proxy_pass http://localhost:8080/api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        
+        # CORS Headers (optional if handled by backend, but good for safety)
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization';
+    }
+
+    # Backend AmuletsOfSiam (Port 8081)
+    location /api/amulets/ {
+        # Note: Strip the /amulets prefix if the backend expects /api/...
+        # rewrite ^/api/amulets/(.*) /api/$1 break; 
+        # But if we just proxy_pass to /api/ on the backend, it often works better:
+        proxy_pass http://localhost:8081/api/;
+        
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        # CORS Headers
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization';
+    }
+}
