@@ -33,23 +33,37 @@ git pull origin main
 ---
 
 ## 🛠 Paso 3: Compilar los Backends (Java)
-Vamos a generar los archivos `.jar` actualizados.
+**IMPORTANTE:** Si tienes problemas de red en el servidor (errores SSL, tiempos de espera), **compila en TU computadora y sube el archivo (Opción B)**.
 
-### BarberShop (Backend)
+### Opción A: Compilar en el Servidor (Si la red funciona bien)
+
+**BarberShop (Backend)**
 ```bash
 cd ~/proyects/BarberShop/backend
 chmod +x mvnw
 ./mvnw clean package -DskipTests
 ```
-*Esto creará un archivo en `target/backend-0.0.1-SNAPSHOT.jar`.*
 
-### AmuletsOfSiam (Backend)
+**AmuletsOfSiam (Backend)**
 ```bash
 cd ~/proyects/siam-amulets/backend
 chmod +x mvnw
 ./mvnw clean package -DskipTests
 ```
-*Esto creará un archivo en `target/backend-0.0.1-SNAPSHOT.jar`.*
+
+### Opción B: Compilar Localmente y Subir (RECOMENDADO si falla el servidor)
+
+1. En tu computadora (no en el servidor), compila el proyecto:
+   ```bash
+   cd /Users/franivan/Documents/ProyectosWeb/GigAmulets/AmuletsOfSiam/backend
+   ./mvnw clean package -DskipTests
+   ```
+
+2. Sube el archivo `.jar` al servidor usando `scp`:
+   ```bash
+   scp target/backend-0.0.1-SNAPSHOT.jar opc@143.47.101.209:~/proyects/siam-amulets/backend/target/
+   ```
+   *(Asegúrate de que la carpeta `target` exista en el servidor, si no, créala antes con `mkdir -p ~/proyects/siam-amulets/backend/target`).*
 
 ---
 
